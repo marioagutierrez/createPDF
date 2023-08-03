@@ -64,4 +64,4 @@ app.get('/:filename', (req, res) => {
     res.sendFile(path.join(uploadFolder, req.params.filename));
 });
 
-app.listen(5000, '0.0.0.0', () => console.log("Server running on port 5000"));
+app.listen(8080, '0.0.0.0', () => console.log("Server running on port 8080"));
