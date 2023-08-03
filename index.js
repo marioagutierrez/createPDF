@@ -1,18 +1,20 @@
 const express = require('express');
 const https = require('https');
-const fs = require('fs');
-const path = require('path');
-const bodyParser = require('body-parser');
+const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
-app.use(bodyParser.json({ limit: '50mb' }));  
+app.use(express.json({ limit: '50mb' }));  
 
-const uploadFolder = ".";  
+const supabaseUrl = 'https://zwdjvpdshkxwmeppjpfu.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp3ZGp2cGRzaGt4d21lcHBqcGZ1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY5MTA3MTcxNSwiZXhwIjoyMDA2NjQ3NzE1fQ.Em9jwCisB1yt2cjBTF_fXQoO_oDvoMFkcBaJ0pjEwnE';
+const supabase = createClient(supabaseUrl, supabaseKey, {
+  persistSession: false
+});
 
-app.post('/upload', (req, res) => {
-    const bodyData = req.body.data;  // Recibe los datos a enviar en la solicitud
+app.post('/upload', async (req, res) => {
+    const bodyData = req.body.data; // Recibe los datos a enviar en la solicitud
     const fileName = req.body.file_name;
-    
+
     // Configuración de la solicitud
     const options = {
         hostname: 'app.useanvil.com',
@@ -20,10 +22,10 @@ app.post('/upload', (req, res) => {
         path: '/api/v1/fill/aN0QkXcSWl4GCHI7iVME.pdf',
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json', 
-            'Authorization': 'Basic UWRrWDF6cVNPOEVkaWtnQzNHSmRxMHlsTmc3RTZWQXI6', 
-            'Cookie': 'sesh=897784e1a463bcaa47fc71ae02e2482b; sesh.sig=txTRENaY37wogpOStkLDBFCntvE; b_id=1f9fc3360f0b38b5c835433d73d9eeaf; b_id.sig=Em0AnYzHiJx9i7b4VKMnb49Am5c'
-        }
+          'Content-Type': 'application/json',
+          'Authorization': 'Basic UWRrWDF6cVNPOEVkaWtnQzNHSmRxMHlsTmc3RTZWQXI6',
+          'Cookie': 'sesh=897784e1a463bcaa47fc71ae02e2482b; sesh.sig=txTRENaY37wogpOStkLDBFCntvE; b_id=1f9fc3360f0b38b5c835433d73d9eeaf; b_id.sig=Em0AnYzHiJx9i7b4VKMnb49Am5c',
+        },
     };
 
     // Realiza la solicitud
@@ -34,18 +36,26 @@ app.post('/upload', (req, res) => {
             data.push(chunk);
         });
 
-        response.on('end', () => {
-            // Concatena los chunks de datos y los guarda como un archivo
+        response.on('end', async () => {
+            // Concatena los chunks de datos
             const buffer = Buffer.concat(data);
-            const filePath = path.join(uploadFolder, fileName);
-            fs.writeFile(filePath, buffer, err => {
-                if (err) {
-                    console.log(err);
-                    res.status(500).send("Error al guardar el archivo");
-                } else {
-                    // Retorna la URL del archivo PDF para poder visualizarlo
-                    res.send(req.protocol + '://' + req.get('host') + '/' + fileName);
-                }
+
+            // Sube el archivo a Supabase Storage
+            const { error: uploadError } = await supabase.storage.from('pdfs').upload(fileName, buffer);
+
+            if (uploadError) {
+                console.log(uploadError);
+                res.status(500).send("Error al subir el archivo");
+                return;
+            }
+
+            // Genera la URL de descarga
+            const url = await supabase.storage.from('pdfs').getPublicUrl(fileName);
+
+            // Retorna la URL del archivo PDF y el nombre del archivo
+            res.json({
+                link: url,
+                file_name: fileName
             });
         });
     });
@@ -60,8 +70,5 @@ app.post('/upload', (req, res) => {
     request.end();
 });
 
-app.get('/:filename', (req, res) => {
-    res.sendFile(path.join(uploadFolder, req.params.filename));
-});
 
 app.listen(8080, '0.0.0.0', () => console.log("Server running on port 8080"));
