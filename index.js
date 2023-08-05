@@ -5,8 +5,8 @@ const { createClient } = require('@supabase/supabase-js');
 const app = express();
 app.use(express.json({ limit: '50mb' }));  
 
-const supabaseUrl = 'https://zwdjvpdshkxwmeppjpfu.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp3ZGp2cGRzaGt4d21lcHBqcGZ1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY5MTA3MTcxNSwiZXhwIjoyMDA2NjQ3NzE1fQ.Em9jwCisB1yt2cjBTF_fXQoO_oDvoMFkcBaJ0pjEwnE';
+const supabaseUrl = 'https://fpvxrsabicqnqdswijck.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwdnhyc2FiaWNxbnFkc3dpamNrIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY3MTI4Njk2NywiZXhwIjoxOTg2ODYyOTY3fQ.q8Ekn0o6vCkQcUvNIvVK92VlvPxoXXhwXlN0RJb4YZY';
 const supabase = createClient(supabaseUrl, supabaseKey, {
   persistSession: false
 });
