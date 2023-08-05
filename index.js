@@ -3,10 +3,13 @@ const form01Routes = require('./routes/form01');
 const form02Routes = require('./routes/form02');
 const form03Routes = require('./routes/form03');
 const form04Routes = require('./routes/form04');
+const form05Routes = require('./routes/form05');
 const form06Routes = require('./routes/form06');
 const form07Routes = require('./routes/form07');
 const form08Routes = require('./routes/form08');
 const form09Routes = require('./routes/form09');
+const form10Routes = require('./routes/form10');
+const form11Routes = require('./routes/form11');
 
 const app = express();
 
@@ -21,5 +24,7 @@ app.use('/form06', form06Routes);
 app.use('/form07', form07Routes);
 app.use('/form08', form08Routes);
 app.use('/form09', form09Routes);
+app.use('/form09', form10Routes);
+app.use('/form09', form11Routes);
 
 app.listen(8080, '0.0.0.0', () => console.log("Server running on port 8080"));
