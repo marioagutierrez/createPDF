@@ -1,3 +1,4 @@
+// /api/v1/fill/unl12lobZJc3X0pZnWR8.pdf
 const express = require('express');
 const https = require('https');
 const { createClient } = require('@supabase/supabase-js');
@@ -18,7 +19,7 @@ router.post('/upload', async (req, res) => {
     const options = {
         hostname: 'app.useanvil.com',
         port: 443,
-        path: '/api/v1/fill/unl12lobZJc3X0pZnWR8.pdf',
+        path: '/api/v1/fill/unl12lobZJc3X0pZnWR8.pdff',
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

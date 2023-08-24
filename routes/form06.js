@@ -1,6 +1,6 @@
 const express = require('express');
 const https = require('https');
-const { createClient } = require('@supabase/supabase-js');
+const { createClient } = require('@supabase/supabase-js')
 
 const router = express.Router();
 

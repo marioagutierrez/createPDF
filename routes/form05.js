@@ -1,7 +1,6 @@
 const express = require('express');
 const https = require('https');
 const { createClient } = require('@supabase/supabase-js');
-
 const router = express.Router();
 
 // Estas credenciales deben ser almacenadas de forma segura, preferentemente en variables de entorno
